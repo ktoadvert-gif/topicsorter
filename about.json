@@ -1,0 +1,7 @@
+{
+  "name": "Discourse Topic Sorter",
+  "about": "A dummy plugin to verify connection",
+  "version": "0.0.1",
+  "authors": "Admin",
+  "url": "https://github.com/admin/discourse-topicsorter"
+}
