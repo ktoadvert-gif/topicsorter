@@ -1,3 +1,0 @@
-  site_settings:
-    discourse_topicsorter_enabled: "Enable the custom Country, Region, City topic filters."
-    topicsorter_taxonomy: "JSON string representing the Country -> Region -> City taxonomy."
