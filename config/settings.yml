@@ -1,9 +1,8 @@
 plugins:
-  discourse_topicsorter:
-    discourse_topicsorter_enabled:
-      default: true
-      client: true
-    topicsorter_taxonomy:
-      default: '[{"country":"USA","regions":[{"region":"California","cities":["Los Angeles","San Francisco"]},{"region":"New York","cities":["New York City","Buffalo"]}]},{"country":"Canada","regions":[{"region":"Ontario","cities":["Toronto","Ottawa"]}]}]'
-      client: true
-      type: string
+  discourse_topicsorter_enabled:
+    default: true
+    client: true
+  topicsorter_taxonomy:
+    default: '[{"country":"USA","regions":[{"region":"California","cities":["Los Angeles","San Francisco"]},{"region":"New York","cities":["New York City","Buffalo"]}]},{"country":"Canada","regions":[{"region":"Ontario","cities":["Toronto","Ottawa"]}]}]'
+    client: true
+    type: string
