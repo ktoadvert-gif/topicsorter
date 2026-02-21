@@ -1,0 +1,5 @@
+en:
+  js:
+    select_country: "Select Country"
+    select_region: "Select Region"
+    select_city: "Select City"
