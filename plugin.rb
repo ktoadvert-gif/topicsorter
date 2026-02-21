@@ -45,20 +45,26 @@ after_initialize do
   end
 
   # Allow frontend to pass location params to TopicQuery
-  add_to_class(:list_controller, :build_topic_list_options) do
-    options = super
-    if params.respond_to?(:permit)
-      # Rails 5+ strong parameters
-      permitted = params.permit(:location_country, :location_region, :location_city)
-      options[:location_country] = permitted[:location_country] if permitted[:location_country].present?
-      options[:location_region] = permitted[:location_region] if permitted[:location_region].present?
-      options[:location_city] = permitted[:location_city] if permitted[:location_city].present?
-    else
-      options[:location_country] = params[:location_country] if params[:location_country].present?
-      options[:location_region] = params[:location_region] if params[:location_region].present?
-      options[:location_city] = params[:location_city] if params[:location_city].present?
+  module TopicsorterListControllerExtension
+    def build_topic_list_options
+      options = super
+      if params.respond_to?(:permit)
+        # Rails 5+ strong parameters
+        permitted = params.permit(:location_country, :location_region, :location_city)
+        options[:location_country] = permitted[:location_country] if permitted[:location_country].present?
+        options[:location_region] = permitted[:location_region] if permitted[:location_region].present?
+        options[:location_city] = permitted[:location_city] if permitted[:location_city].present?
+      else
+        options[:location_country] = params[:location_country] if params[:location_country].present?
+        options[:location_region] = params[:location_region] if params[:location_region].present?
+        options[:location_city] = params[:location_city] if params[:location_city].present?
+      end
+      options
     end
-    options
+  end
+
+  reloadable_patch do
+    ListController.prepend(TopicsorterListControllerExtension)
   end
 
   # Filter the database queries based on locations
