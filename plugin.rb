@@ -47,9 +47,17 @@ after_initialize do
   # Allow frontend to pass location params to TopicQuery
   add_to_class(:list_controller, :build_topic_list_options) do
     options = super
-    options[:location_country] = params[:location_country] if params[:location_country].present?
-    options[:location_region] = params[:location_region] if params[:location_region].present?
-    options[:location_city] = params[:location_city] if params[:location_city].present?
+    if params.respond_to?(:permit)
+      # Rails 5+ strong parameters
+      permitted = params.permit(:location_country, :location_region, :location_city)
+      options[:location_country] = permitted[:location_country] if permitted[:location_country].present?
+      options[:location_region] = permitted[:location_region] if permitted[:location_region].present?
+      options[:location_city] = permitted[:location_city] if permitted[:location_city].present?
+    else
+      options[:location_country] = params[:location_country] if params[:location_country].present?
+      options[:location_region] = params[:location_region] if params[:location_region].present?
+      options[:location_city] = params[:location_city] if params[:location_city].present?
+    end
     options
   end
 
@@ -57,24 +65,27 @@ after_initialize do
   if defined?(TopicQuery)
     TopicQuery.add_custom_filter(:location_country) do |results, topic_query|
       if topic_query.options[:location_country].present?
+        val = topic_query.options[:location_country]
         results = results.joins("INNER JOIN topic_custom_fields tcf_country ON tcf_country.topic_id = topics.id")
-                         .where("tcf_country.name = 'location_country' AND tcf_country.value = ?", topic_query.options[:location_country])
+                         .where("tcf_country.name = 'location_country' AND tcf_country.value = ?", val)
       end
       results
     end
 
     TopicQuery.add_custom_filter(:location_region) do |results, topic_query|
       if topic_query.options[:location_region].present?
+        val = topic_query.options[:location_region]
         results = results.joins("INNER JOIN topic_custom_fields tcf_region ON tcf_region.topic_id = topics.id")
-                         .where("tcf_region.name = 'location_region' AND tcf_region.value = ?", topic_query.options[:location_region])
+                         .where("tcf_region.name = 'location_region' AND tcf_region.value = ?", val)
       end
       results
     end
 
     TopicQuery.add_custom_filter(:location_city) do |results, topic_query|
       if topic_query.options[:location_city].present?
+        val = topic_query.options[:location_city]
         results = results.joins("INNER JOIN topic_custom_fields tcf_city ON tcf_city.topic_id = topics.id")
-                         .where("tcf_city.name = 'location_city' AND tcf_city.value = ?", topic_query.options[:location_city])
+                         .where("tcf_city.name = 'location_city' AND tcf_city.value = ?", val)
       end
       results
     end
