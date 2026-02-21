@@ -1,0 +1,3 @@
+en:
+  site_settings:
+    topicsorter_taxonomy: "JSON string representing the Country -> Region -> City taxonomy."
