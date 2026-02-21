@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class TopicsorterComposer extends Component {
@@ -20,16 +21,21 @@ export default class TopicsorterComposer extends Component {
     return this.args.outletArgs.model;
   }
 
+  // Use get() to read from the Ember model safely in case it hasn't been initialized
+  @tracked selectedCountry = this.model.get ? this.model.get("location_country") : this.model.location_country;
+  @tracked selectedRegion = this.model.get ? this.model.get("location_region") : this.model.location_region;
+  @tracked selectedCity = this.model.get ? this.model.get("location_city") : this.model.location_city;
+
   get currentCountry() {
-    return this.model.location_country;
+    return this.selectedCountry;
   }
 
   get currentRegion() {
-    return this.model.location_region;
+    return this.selectedRegion;
   }
 
   get currentCity() {
-    return this.model.location_city;
+    return this.selectedCity;
   }
 
   get countries() {
@@ -90,20 +96,35 @@ export default class TopicsorterComposer extends Component {
 
   @action
   onCountryChange(value) {
-    this.model.set("location_country", value || null);
-    this.model.set("location_region", null);
-    this.model.set("location_city", null);
+    this.selectedCountry = value || null;
+    this.selectedRegion = null;
+    this.selectedCity = null;
+    this.updateModel();
   }
 
   @action
   onRegionChange(value) {
-    this.model.set("location_region", value || null);
-    this.model.set("location_city", null);
+    this.selectedRegion = value || null;
+    this.selectedCity = null;
+    this.updateModel();
   }
 
   @action
   onCityChange(value) {
-    this.model.set("location_city", value || null);
+    this.selectedCity = value || null;
+    this.updateModel();
+  }
+
+  updateModel() {
+    if (this.model.set) {
+      this.model.set("location_country", this.selectedCountry);
+      this.model.set("location_region", this.selectedRegion);
+      this.model.set("location_city", this.selectedCity);
+    } else {
+      this.model.location_country = this.selectedCountry;
+      this.model.location_region = this.selectedRegion;
+      this.model.location_city = this.selectedCity;
+    }
   }
 
   get showFields() {
