@@ -7,7 +7,7 @@
 
 # see about.json for full plugin metadata
 
-enabled_site_setting :topicsorter_taxonomy
+enabled_site_setting :discourse_topicsorter_enabled
 
 after_initialize do
   Rails.logger.info("Initializing discourse-topicsorter plugin...")
